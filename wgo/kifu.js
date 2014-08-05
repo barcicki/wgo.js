@@ -519,6 +519,15 @@ KifuReader.prototype = {
 		this.change = exec_next.call(this, i);
 		return this;
 	},
+
+    /**
+     * Informs if current position contains follow-up moves
+     * @returns {Boolean}
+     */
+
+    hasNext: function () {
+        return this.node.children && this.node.children.length > 0;
+    },
 	
 	/**
 	 * Execute all nodes till the end.

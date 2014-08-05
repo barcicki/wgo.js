@@ -69,18 +69,20 @@ var update_board = function(e) {
 		});
 	}
 	
-	// add variantion letters
-	if(e.node.children.length > 1) {
-		for(var i = 0; i < e.node.children.length; i++) {
-			if(e.node.children[i].move && !e.node.children[i].move.pass)	add.push({
-				type: "LB",
-				text: String.fromCharCode(65+i),
-				x: e.node.children[i].move.x,
-				y: e.node.children[i].move.y,
-				c: "rgba(0,32,128,0.8)"
-			});
-		}
-	}
+	// add variation letters
+    if (this.config.showVariations !== false) {
+        if (e.node.children.length > 1) {
+            for (var i = 0; i < e.node.children.length; i++) {
+                if (e.node.children[i].move && !e.node.children[i].move.pass)    add.push({
+                    type: "LB",
+                    text: String.fromCharCode(65 + i),
+                    x:    e.node.children[i].move.x,
+                    y:    e.node.children[i].move.y,
+                    c:    "rgba(0,32,128,0.8)"
+                });
+            }
+        }
+    }
 	
 	// add other markup
 	if(e.node.markup) {
@@ -159,10 +161,38 @@ var board_click_default = function(x,y) {
 	for(var i in this.kifuReader.node.children) {
 		if(this.kifuReader.node.children[i].move && this.kifuReader.node.children[i].move.x == x && this.kifuReader.node.children[i].move.y == y) {
 			this.next(i);
-			return;
+
+            if (this.config.autoRespond) {
+
+                // try to move
+                this.next(0);
+
+                // if no more moves in kifu (previous try failed or there're no more moves afterwards)
+                if (!this.kifuReader.hasNext()) {
+                    this.dispatchEvent({
+                        type: "nomoremoves",
+                        target: this,
+                        node: this.kifuReader.node,
+                        position: this.kifuReader.getPosition(),
+                        path: this.kifuReader.path,
+                        change: this.kifuReader.change
+                    });
+                }
+            }
+			return false;
 		}
 	}
-}
+
+    this.dispatchEvent({
+        type: "notinkifu",
+        isValid: this.kifuReader.game.isValid(x, y, null), // null - for auto selecting color
+        target: this,
+        node: this.kifuReader.node,
+        position: this.kifuReader.getPosition(),
+        path: this.kifuReader.path,
+        change: this.kifuReader.change
+    });
+};
 
 // coordinates drawing handler - adds coordinates on the board
 /*var coordinates = {
@@ -255,6 +285,8 @@ Player.prototype = {
 		if(this.config.update) this.addEventListener("update", this.config.update);
 		if(this.config.frozen) this.addEventListener("frozen", this.config.frozen);
 		if(this.config.unfrozen) this.addEventListener("unfrozen", this.config.unfrozen);
+        if(this.config.notinkifu) this.addEventListener("notinkifu", this.config.notinkifu);
+        if(this.config.nomoremoves) this.addEventListener("nomoremoves", this.config.notinkifu);
 		
 		this.board.addEventListener("click", board_click_default.bind(this));
 		this.element.addEventListener("click", this.focus.bind(this));
@@ -651,6 +683,10 @@ Player.default = {
 	unfrozen: undefined,
 	allowIllegalMoves: false,
 	markLastMove: true,
+    showVariations: true,
+    autoRespond: false,
+    notinkifu: undefined,
+    nomoremoves: undefined
 }
 
 WGo.Player = Player;

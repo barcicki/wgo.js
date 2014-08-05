@@ -427,6 +427,24 @@ BasicPlayer.attributes = {
 			else this.sgfFile = value;
 		}
 	},
+
+    "data-wgo-problem": function (value) {
+        if (value.toLowerCase() != "false") {
+            this.enableWheel = false;
+            this.lockScroll = false;
+            this.enableKeys = false;
+            this.rememberPath = false;
+            this.showVariations = false;
+            this.autoRespond = true;
+            this.kifuReader = true;
+            this.layout = {
+                left:   [],
+                bottom: [],
+                top:    [],
+                right:  []
+            }
+        }
+    },
 	
 	"data-wgo-board": function(value) {
 		// using eval to parse strings like "stoneStyle: 'painted'"
@@ -448,6 +466,14 @@ BasicPlayer.attributes = {
 	"data-wgo-onunfrozen": function(value) {
 		this.unfrozen = new Function(value);
 	},
+
+    "data-wgo-notinkifu": function (value) {
+        this.notinkifu = new Function(value);
+    },
+
+    "data-wgo-nomoremoves": function (value) {
+        this.nomoremoves = new Function(value);
+    },
 	
 	"data-wgo-layout": function(value) {
 		this.layout = eval("({"+value+"})");
