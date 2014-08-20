@@ -1,2 +1,7 @@
-(;GM[1]FF[4]CA[UTF-8]SZ[9]AW[cf][ef]AB[dg][de](;B[df]C[RIGHT
-success - black connected])(;B[tt];W[df]C[failed - white connected]))
+(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]
+RU[Japanese]SZ[9]KM[0.00]
+AW[cf][ef]AB[de][dg]
+(;B[df]C[RIGHT
+success - black connected])
+(;B[]
+;W[df]C[failed - white connects]))

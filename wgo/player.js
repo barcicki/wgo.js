@@ -367,13 +367,21 @@ Player.prototype = {
 			node: this.kifuReader.node,
 			position: this.kifuReader.getPosition(),
 			path: this.kifuReader.path,
-			change: this.kifuReader.change,
-		}
+			change: this.kifuReader.change
+		};
 		
 		//if(!this.kifuReader.node.parent) ev.msg = this.getGameInfo();
 
 		this.dispatchEvent(ev);
 	},
+
+    /**
+     * Resets player
+     */
+    reset: function () {
+        this.kifuReader.goTo(0);
+        this.update();
+    },
 	
 	/**
 	 * Prepare kifu for replaying. Event 'kifuLoaded' is triggered.

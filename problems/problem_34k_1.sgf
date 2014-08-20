@@ -1,2 +1,37 @@
-(;GM[1]FF[4]CA[UTF-8]SZ[9]AB[cg][dg][fg][eh]AW[ef][eg][fh]DD[fi](;B[tt]AW[dh]C[failed - E2 was taken])(;B[dh];W[gg]C[failed - F3 was taken])(;B[ch];W[gg]C[failed - F3 was taken])(;B[ci];W[gg]C[failed - F3 was taken])(;B[di];W[gg]C[failed - F3 was taken])(;B[ei];W[gg]C[failed - F3 was taken])(;B[gi]DD[gi])(;B[fi];W[gh]C[failed - F2 escaped])(;B[gh]C[RIGHT
+(;GM[1]FF[4]CA[UTF-8]AP[CGoban:3]ST[2]
+RU[Japanese]SZ[9]KM[0.00]
+AW[ef][eg][fh]AB[cg][dg][fg][eh]DD[fi]
+(;B[]
+;W[dh]C[failed - E2 will be catched])
+(;B[dh]
+;W[gg]C[failed - F3 was taken])
+(;B[ch]
+;W[gg]C[failed - F3 was taken])
+(;B[ci]
+;W[gg]C[failed - F3 was taken])
+(;B[di]
+;W[gg]C[failed - F3 was taken])
+(;B[ei]
+;W[gg]C[failed - F3 was taken])
+(;B[gi]DD[gi]
+;W[dh]
+(;B[ei]
+;W[di]
+(;B[fi]
+;W[gh]
+(;B[hi]
+;W[hh]
+(;B[ii]
+;W[ih])
+(;B[]
+;W[ii]C[faile - white catches E2 group]))
+(;B[]
+;W[hi]C[faile - white catches E2 group]))
+(;B[]
+;W[fi]C[faile - white catches E2 group]))
+(;B[]
+;W[ei]C[faile - white catches E2]))
+(;B[fi]
+;W[gh]C[failed - F2 escaped])
+(;B[gh]C[RIGHT
 success - you've got F2]))

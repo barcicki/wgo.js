@@ -159,11 +159,11 @@
                 div.appendChild(status);
 
                 player.addEventListener('nomoremoves', isProblemSolved);
+                player.addEventListener('notinkifu', isProblemSolved); // handling situations where pas was not provided
 
                 status.addEventListener('click', function () {
                     if (hasCompleted) {
-                        player.kifuReader.goTo(0);
-                        player.update();
+                        player.reset();
                         triggerReset();
                     }
                     return false;
