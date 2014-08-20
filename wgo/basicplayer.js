@@ -154,6 +154,30 @@ var BasicPlayer = WGo.extendClass(WGo.Player, function(elem, config) {
 	for(var key in BasicPlayer.default) if(this.config[key] === undefined && BasicPlayer.default[key] !== undefined) this.config[key] = BasicPlayer.default[key];
 	// add default configuration of Player class
 	for(var key in WGo.Player.default) if(this.config[key] === undefined && WGo.Player.default[key] !== undefined) this.config[key] = WGo.Player.default[key];
+
+    if (this.config.problemSgfFile || this.config.problemSgf) {
+
+        if (this.config.problemSgf) {
+            this.config.sgf = this.config.problemSgf;
+        } else {
+            this.config.sgfFile = this.config.problemSgfFile;
+        }
+
+        this.config.enableWheel = false;
+        this.config.lockScroll = false;
+        this.config.enableKeys = false;
+        this.config.rememberPath = false;
+        this.config.showVariations = false;
+        this.config.autoRespond = true;
+        this.config.kifuReader = true;
+        this.config.showNotInKifu = true;
+        this.config.layout = {
+            left:   [],
+            bottom: [],
+            top:    [],
+            right:  []
+        }
+    }
 	
 	this.element = elem
 	this.element.innerHTML = "";
@@ -437,6 +461,7 @@ BasicPlayer.attributes = {
             this.showVariations = false;
             this.autoRespond = true;
             this.kifuReader = true;
+            this.showNotInKifu = true,
             this.layout = {
                 left:   [],
                 bottom: [],

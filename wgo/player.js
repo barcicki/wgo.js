@@ -183,9 +183,52 @@ var board_click_default = function(x,y) {
 		}
 	}
 
+    var isValid = this.kifuReader.game.isValid(x, y, null);
+
+    if (this.config.showNotInKifu && isValid) {
+
+        // find children with pas, if found, save next move for later
+        var afterPasMove = null;
+        this.kifuReader.node.children.forEach(function (child) {
+            if (child.move.pass) {
+                afterPasMove = child.children[0];
+                return false;
+            }
+        }, this);
+
+        // append the not-in-kifu move
+        this.kifuReader.node.appendChild(new WGo.KNode({
+            move: {
+                x: x,
+                y: y,
+                c: this.kifuReader.game.turn
+            }
+        }));
+        // play not-in-kifu move
+        this.next(this.kifuReader.node.children.length - 1);
+
+        // if after pas move exists play it and trigger nomoremoves
+        if (afterPasMove && afterPasMove.move) {
+            this.kifuReader.node.appendChild(afterPasMove);
+            this.next(this.kifuReader.node.children.length - 1);
+
+            this.dispatchEvent({
+                type: "nomoremoves",
+                target: this,
+                node: this.kifuReader.node,
+                position: this.kifuReader.getPosition(),
+                path: this.kifuReader.path,
+                change: this.kifuReader.change
+            });
+
+            // don't trigger notinkifu
+            return false;
+        }
+    }
+
     this.dispatchEvent({
         type: "notinkifu",
-        isValid: this.kifuReader.game.isValid(x, y, null), // null - for auto selecting color
+        isValid: isValid,
         target: this,
         node: this.kifuReader.node,
         position: this.kifuReader.getPosition(),
@@ -671,6 +714,8 @@ Player.default = {
 	sgf: undefined,
 	json: undefined,
 	sgfFile: undefined,
+    problemSgf: undefined,
+    problemSgfFile: undefined,
 	move: undefined,
 	board: {},
 	enableWheel: true,
@@ -685,6 +730,7 @@ Player.default = {
 	markLastMove: true,
     showVariations: true,
     autoRespond: false,
+    showNotInKifu: false,
     notinkifu: undefined,
     nomoremoves: undefined
 }

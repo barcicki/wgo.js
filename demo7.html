@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>WGo</title>
+	<script src="wgo/wgo.js"></script>
+	<script src="wgo/kifu.js"></script>
+	<script src="wgo/sgfparser.js"></script>
+	<script src="wgo/player.js"></script>
+	<script src="wgo/basicplayer.js"></script>
+	<script src="wgo/basicplayer.component.js"></script>
+	<script src="wgo/basicplayer.infobox.js"></script>
+	<script src="wgo/basicplayer.commentbox.js"></script>
+	<script src="wgo/basicplayer.control.js"></script>
+	<script src="wgo/player.editable.js"></script>
+	<script src="wgo/scoremode.js"></script>
+	<script src="wgo/player.permalink.js"></script>
+
+    <script>
+        (function(global) {
+            'use strict';
+
+//            var haveCompleted = false,
+//                problemPlayer,
+//                title;
+//
+//            function triggerSuccess() {
+//                title.innerHTML = 'Correct! Click here to restart.';
+//                title.style.color = 'green';
+//                title.style.cursor = 'pointer';
+//                haveCompleted = true;
+//            }
+//
+//            function triggerFail() {
+//                title.innerHTML = 'Incorrect. Click here to try again.';
+//                title.style.color = 'red';
+//                title.style.cursor = 'pointer';
+//                haveCompleted = true;
+//            }
+//
+//            function triggerReset(text) {
+//                title.innerHTML = text;
+//                title.style.color = '';
+//                title.style.cursor = 'default';
+//                haveCompleted = false;
+//            }
+//
+//            global.addEventListener('load', function () {
+//                var prevTitle;
+//
+//                title = document.getElementsByTagName('h3')[0];
+//                problemPlayer = document.getElementById('problem')._wgo_player;
+//                prevTitle = title.innerHTML;
+//
+//                title.addEventListener('click', function () {
+//                    if (haveCompleted) {
+//                        problemPlayer.kifuReader.goTo(0);
+//                        problemPlayer.update();
+//                        triggerReset(prevTitle);
+//                    }
+//                    return false;
+//                })
+//            });
+//
+//            /**
+//             * Event handler for notinkifu and nomoremoves events.
+//             * Analysis of params will allow to determine what outcome of the event should be.
+//             * @param {Object} params
+//             */
+//            function isProblemSolved(params) {
+//
+//                // do nothing if already solved/failed the problem
+//                if (haveCompleted) {
+//                    return;
+//                }
+//
+//                // fail when the move is valid but was not found in kifu
+//                if (params.type === 'notinkifu' && params.isValid) {
+//                    triggerFail();
+//                    return;
+//                }
+//
+//                // check if there're no more moves
+//                // this condition in fact is not necessary :)
+//                if (params.type === 'nomoremoves') {
+//
+//                    // solution is hidden inside the move's comment
+//                    if (params.node.comment === 'RIGHT') {
+//                        triggerSuccess();
+//                    } else {
+//                        triggerFail();
+//                    }
+//                }
+//            }
+//
+//            global.isProblemSolved = isProblemSolved;
+
+            function decorateProblem(div) {
+                var player = new WGo.BasicPlayer(div, {
+                        problemSgfFile: div.getAttribute('data-problem')
+                    }),
+                    status = document.createElement('div'),
+                    hasCompleted = false;
+
+                function triggerSuccess(comment) {
+                    status.innerHTML = 'Correct! ' + comment + '<br/>Click here to restart.';
+                    status.style.color = 'green';
+                    status.style.cursor = 'pointer';
+                    hasCompleted = true;
+                    player.config.showNotInKifu = false;
+                }
+
+                function triggerFail(comment) {
+                    status.innerHTML = 'Incorrect. ' + comment + '<br/>Click here to try again.';
+                    status.style.color = 'red';
+                    status.style.cursor = 'pointer';
+                    hasCompleted = true;
+                    player.config.showNotInKifu = false;
+                }
+
+                function triggerReset() {
+                    status.innerHTML = 'Solve the problem';
+                    status.style.color = '';
+                    status.style.cursor = 'default';
+                    hasCompleted = false;
+                    player.config.showNotInKifu = true;
+                }
+
+                /**
+                 * Event handler for notinkifu and nomoremoves events.
+                 * Analysis of params will allow to determine what outcome of the event should be.
+                 * @param {Object} params
+                 */
+                function isProblemSolved(params) {
+
+                    // do nothing if already solved/failed the problem
+                    if (hasCompleted) {
+                        return;
+                    }
+
+                    // fail when the move is valid but was not found in kifu
+                    if (params.type === 'notinkifu' && params.isValid) {
+                        triggerFail(params.node.comment || '');
+                        return;
+                    }
+
+                    // check if there're no more moves
+                    // this condition in fact is not necessary :)
+                    if (params.type === 'nomoremoves') {
+
+                        // solution is hidden inside the move's comment
+                        if (params.node.comment && ~params.node.comment.indexOf('RIGHT')) {
+                            triggerSuccess(params.node.comment);
+                        } else {
+                            triggerFail(params.node.comment || '');
+                        }
+                    }
+                }
+
+                div.appendChild(status);
+
+                player.addEventListener('nomoremoves', isProblemSolved);
+
+                status.addEventListener('click', function () {
+                    if (hasCompleted) {
+                        player.kifuReader.goTo(0);
+                        player.update();
+                        triggerReset();
+                    }
+                    return false;
+                });
+
+                triggerReset();
+            }
+
+            global.addEventListener('load', function () {
+                var divs = document.getElementsByTagName('div');
+
+                Array.prototype.slice.call(divs).forEach(function (div) {
+                    if (div.hasAttribute('data-problem')) {
+                        decorateProblem(div);
+                    }
+                });
+            });
+        }(window));
+    </script>
+
+	<link rel="stylesheet" type="text/css" href="wgo/wgo.player.css" />
+
+</head>
+<body>
+
+<h3>34k problem #1</h3>
+<div data-problem="problems/problem_34k_1.sgf" style="width: 200px; margin: 0"></div>
+
+<h3>34k problem #1</h3>
+<div data-problem="problems/problem_34k_2.sgf" style="width: 200px; margin: 0"></div>
+
+<h3>A slap in the face problem</h3>
+<div data-problem="problems/problem_slap.sgf" style="width: 200px; margin: 0"></div>
+
+<h3>Extending problem</h3>
+<div data-problem="problems/problem_extend.sgf" style="width: 200px; margin: 0"></div>
+
+</body>
+</html>
